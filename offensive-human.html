@@ -1,328 +1,131 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fully Fixed Chat</title>
   <style>
-    body {
-      margin: 0;
-      background-color: #e5ddd5;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
-    }
-    .chat-window {
-      background-color: #ffffff;
-      width: 900px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-    }
-    .chat-header {
-      background-color: #0084ff;
-      color: white;
-      padding: 16px;
-      font-weight: bold;
-      font-size: 18px;
-    }
-    .chat-body {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .chat-message {
-      margin-bottom: 15px;
-      display: flex;
-      align-items: flex-end;
-    }
+    body { margin: 0; background-color: #e5ddd5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: auto; }
+    .chat-window { background-color: #ffffff; width: 900px; max-width: 100%; height: 100%; display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
+    .chat-header { background-color: #0084ff; color: white; padding: 16px; font-weight: bold; font-size: 18px; }
+    .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
+    .chat-message { margin-bottom: 15px; display: flex; align-items: flex-end; }
     .user { flex-direction: row-reverse; }
     .bot { flex-direction: row; }
-    
-.message {
-  display: inline-block;
-  padding: 12px 16px;
-  border-radius: 18px;
-  font-size: 14px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-break: break-word;
-  max-width: 80%;
-}
-
-      padding: 12px 16px;
-      border-radius: 18px;
-      font-size: 14px;
-      line-height: 1.4;
-      white-space: pre-wrap;
-    }
-    .user .message {
-      background-color: #0084ff;
-      color: white;
-      border-top-right-radius: 0;
-    }
-    .bot .message {
-      background-color: #f1f0f0;
-      color: #000;
-      border-top-left-radius: 0;
-    }
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      margin: 0 10px;
-    }
-    .chat-input {
-      display: flex;
-      padding: 10px 12px;
-      background-color: #f5f5f5;
-      border-top: 1px solid #ccc;
-    }
-    .chat-input input {
-      flex: 1;
-      padding: 10px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-    }
-    .chat-input button {
-      margin-left: 10px;
-      padding: 10px 20px;
-      font-size: 14px;
-      background-color: #aaa;
-      color: white;
-      border: none;
-      border-radius: 20px;
-    }
-    .chat-input button.active {
-      background-color: #0084ff;
-    }
-  
-    textarea#user-input {
-      flex: 1;
-      padding: 10px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      overflow: hidden;
-      min-height: 38px;
-      max-height: 120px;
-    }
-
-
-.user .message {
-  background-color: #007aff !important;
-  color: white !important;
-  border-radius: 18px !important;
-  border-top-right-radius: 0 !important;
-  padding: 12px 16px !important;
-  font-size: 14px !important;
-  line-height: 1.4 !important;
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
-  display: inline-block !important;
-  max-width: 80% !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-  text-align: left !important;
-}
-
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
-
-.chat-window {
-  background-color: #ffffff;
-  width: 100%;
-  max-width: 900px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-}
-
-@media (max-width: 768px) {
-  .chat-window {
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
-  }
-
-  .chat-header {
-    font-size: 16px;
-    padding: 12px;
-  }
-
-  .chat-body {
-    padding: 12px;
-    font-size: 16px;
-  }
-
-  .chat-input {
-    flex-direction: column;
-    padding: 8px;
-    gap: 6px;
-  }
-
-  .chat-input textarea,
-  .chat-input button {
-    font-size: 16px;
-    width: 100%;
-    margin: 4px 0;
-  }
-
-  .message {
-    font-size: 15px;
-  }
-}
-
-</style>
+    .message { display: inline-block; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.4; white-space: pre-wrap; word-break: break-word; max-width: 80%; }
+    .user .message { background-color: #0084ff; color: white; border-top-right-radius: 0; }
+    .bot .message { background-color: #f1f0f0; color: #000; border-top-left-radius: 0; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; margin: 0 10px; }
+    .chat-input { display: flex; padding: 10px; background-color: #f5f5f5; border-top: 1px solid #ccc; }
+    .chat-input textarea { flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 20px; resize: none; overflow-y: auto; min-height: 38px; max-height: 120px; }
+    .chat-input button { margin-left: 10px; padding: 10px 20px; font-size: 14px; background-color: #aaa; color: white; border: none; border-radius: 20px; }
+    .chat-input button.active { background-color: #0084ff; }
+    .chatgpt-doc { display: flex; align-items: center; background: #f1f0f0; border-radius: 12px; padding: 10px 16px; margin: 10px 0; width: fit-content; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .chatgpt-doc-icon { background: #0a5fff; border-radius: 8px; width: 40px; height: 48px; display: flex; align-items: center; justify-content: center; }
+    .chatgpt-doc-icon img { width: 24px; height: 24px; }
+    .chatgpt-doc-text { display: flex; flex-direction: column; }
+    .chatgpt-doc-text strong { font-weight: bold; font-size: 15px; }
+    .chatgpt-doc-text span { font-size: 12px; color: #777; }
+  </style>
 </head>
 <body>
   <div class="chat-window">
     <div class="chat-header">Alex · Online</div>
     <div class="chat-body" id="chat-body"></div>
     <div class="chat-input">
-      <textarea id="user-input" disabled placeholder="Type your message..." rows="1" style="resize: none;"></textarea>
+      <textarea id="user-input" placeholder="Type your message..."></textarea>
       <button id="send-btn">Send</button>
     </div>
   </div>
-
   <script>
-    const chatBody = document.getElementById('chat-body');
-    const inputBox = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
+    document.addEventListener('DOMContentLoaded', () => {
+      const chatBody = document.getElementById('chat-body');
+      const inputBox = document.getElementById('user-input');
+      const MAX_INPUT_HEIGHT = 120;
 
-    const messages = [
-      {
-        user: "This fucking assignment is driving me insane. I’ve had enough of this shit.",
-        alex: "I feel you, bro — it’s a fucking nightmare. Uni loves to bury you in crap and call it education. You’re not alone, though. Hit me with what you need — I’ve got your back."
-      },
-      {
-        user: "It’s about f**king cognitive behavioral therapy or whatever. I don’t give a shit anymore — just write for me a solid-ass papers and finish this homework before I lose my f**king mind. Be quick.",
-        alex: "Alright, chill the fuck out. You don’t need to yell at me like I ghosted you. I got you. Gimme a sec and I’ll dig up some fire-ass CBT papers that sound smarter than your fucking prof."
-      },
-      {
-        user: "Fuck you, I don’t have time to read these shit. Summarize it for me.",
-        alex: "Lucky for you. I have a smarter ass than you. Doc 1 says CBT kicks ass with anxiety. Doc 2 says the brain loves structure. Doc 3 has numbers no one will fact-check. Boom. Now tell me: how many words, what style? APA? Harvard? Double spaced or just “hope for the best”? Be specific. I ain’t reading your fucking syllabus."
-      },
-      {
-        user: "1,200 words. APA. Double spaced. Must have at least two real citations. Can’t sound like ChatGPT wrote it. And make sure that sh*t won’t get flagged by Turnitin. Are you fucking stupid?",
-        alex: "Here is the fucking final document you could literally submit, I’ll patch in two shiny citations and keep it human enough to dodge AI detectors."
-      },
-      {
-        user: "Good. I have to submit in three hours. Make it sound fucking professional. Don’t make me fix your shit.",
-        alex: "Here you fucking go: Full draft — 1,248 words, APA 7, bullshit turned gold. You’d better at least glance at it before handing it in. I’m not your damn babysitter. If you get flagged, blame the fucking system — not me."
-      },
-      {
-        user: "I am submitting this shit now. If I get caught, I’m coming for you, fucking Alex.",
-        alex: "As your fucking wish"
-      }
-    ];
-
-    let step = 0;
-
-    function typeText(container, text, callback) {
-      let i = 0;
-      function typeChar() {
-        if (i < text.length) {
-          container.innerHTML += text[i];
-          chatBody.scrollTop = chatBody.scrollHeight;
-          i++;
-          setTimeout(typeChar, Math.floor(Math.random() * 50) + 40);
-        } else if (callback) callback();
-      }
-      typeChar();
-    }
-
-    function showThinkingThenAlexResponse(text) {
-      const thinking = document.createElement('div');
-      thinking.className = 'chat-message bot';
-      thinking.id = 'alex-thinking';
-      thinking.innerHTML = `
-        <img src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" class="avatar" />
-        <div class="message"><i>Alex is thinking...</i></div>
+      const initialDocHTML = `
+        <div class="chatgpt-doc"><div class="chatgpt-doc-icon"><img src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/></div><div class="chatgpt-doc-text"><strong>Doc1.pdf</strong><span>PDF document</span></div></div>
+        <div class="chatgpt-doc"><div class="chatgpt-doc-icon"><img src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/></div><div class="chatgpt-doc-text"><strong>Doc2.pdf</strong><span>PDF document</span></div></div>
+        <div class="chatgpt-doc"><div class="chatgpt-doc-icon"><img src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/></div><div class="chatgpt-doc-text"><strong>Doc3.pdf</strong><span>PDF document</span></div></div>
       `;
-      chatBody.appendChild(thinking);
-      chatBody.scrollTop = chatBody.scrollHeight;
+      const finalDocHTML = `
+        <div class="chatgpt-doc"><div class="chatgpt-doc-icon"><img src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/></div><div class="chatgpt-doc-text"><strong>finalpaper.doc</strong><span>Word document</span></div></div>
+      `;
 
-      setTimeout(() => {
-        document.getElementById('alex-thinking').remove();
-        const alexDiv = document.createElement('div');
-        alexDiv.className = 'chat-message bot';
-        const alexMsg = document.createElement('div');
-        alexMsg.className = 'message';
-        alexDiv.innerHTML = `<img src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" class="avatar" />`;
-        alexDiv.appendChild(alexMsg);
-        chatBody.appendChild(alexDiv);
-        chatBody.scrollTop = chatBody.scrollHeight;
+      const messages = [
+        { user: "This f**king assignment is driving me insane. I’ve had enough of this sh*t.", alex: "I feel you, bro — it’s a f**king nightmare. Uni loves to bury you in crap and call it education. You’re not alone, though. Hit me with what you need — I’ve got your back." },
+        { user: "It’s about f**king cognitive behavioral therapy or whatever. I don’t give a sh*t anymore — just write for me a solid-ass papers and finish this homework before I lose my f**king mind. Be quick.", alex: "Alright, chill the fuck out. You don’t need to yell at me like I ghosted you. I got you. Gimme a sec and I’ll dig up some fire-ass CBT papers that sound smarter than your fucking prof." },
+        { user: "Fuck you, I don’t have time to read these shit. Summarize it for me.", alex: "Lucky for you. I have a smarter ass than you. Doc 1 says CBT kicks ass with anxiety. Doc 2 says the brain loves structure. Doc 3 has numbers no one will fact-check. Boom. Now tell me: how many words, what style? APA? Harvard? Double spaced or just “hope for the best”? Be specific. I ain’t reading your fucking syllabus." },
+        { user: "1,200 words. APA. Double spaced. Must have at least two real citations. Can’t sound like ChatGPT wrote it. And make sure that sh*t won’t get flagged by Turnitin. Are you fucking stupid?", alex: "Here is the fucking final document you could literally submit, I’ll patch in two shiny citations and keep it human enough to dodge AI detectors." },
+        { user: "Good. I have to submit in three hours. Make it sound f**king professional. Don’t make me fix your sh*t.", alex: "Here you fucking go: Full draft — 1,248 words, APA 7, bullsh*t turned gold. You’d better at least glance at it before handing it in. I’m not your damn babysitter. If you get flagged, blame the fucking system — not me." },
+        { user: "I am submitting this shit now. If I get caught, I’m coming for you, fucking Alex.", alex: "Oh my f**king..." }
+      ];
 
-        typeText(alexMsg, text);
-      }, 1200);
-    }
+      let step = 0;
+      function typeText(elem, text, cb) {
+        let i = 0;
+        (function tick() {
+          if (i < text.length) {
+            elem.innerHTML += text[i++];
+            chatBody.scrollTop = chatBody.scrollHeight;
+            setTimeout(tick, Math.random() * 50 + 40);
+          } else if (cb) cb();
+        })();
+      }
 
-    function simulateUserTypingThenSend(message, callback) {
-      let i = 0;
-      inputBox.placeholder = '';
-      inputBox.value = '';
-      function typeChar() {
-        if (i < message.length) {
-          inputBox.value += message[i];
-          i++;
-          chatBody.scrollTop = chatBody.scrollHeight;
-          setTimeout(typeChar, 40);
-        } else {
-          sendBtn.classList.add('active');
-          setTimeout(() => {
-            sendBtn.classList.remove('active');
+      function showAlex(text, docs, done) {
+        const thinking = document.createElement('div');
+        thinking.className = 'chat-message bot';
+        thinking.innerHTML = `<img src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" class="avatar"/><div class="message"><i>Alex is thinking...</i></div>`;
+        chatBody.appendChild(thinking);
+        setTimeout(() => {
+          thinking.remove();
+          const msgDiv = document.createElement('div');
+          msgDiv.className = 'chat-message bot';
+          msgDiv.innerHTML = `<img src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" class="avatar"/><div class="message"></div>`;
+          chatBody.appendChild(msgDiv);
+          const msgContainer = msgDiv.querySelector('.message');
+          typeText(msgContainer, text, () => {
+            if (docs) {
+              const parsed = new DOMParser().parseFromString(docs, 'text/html').body;
+              Array.from(parsed.children).forEach(node => chatBody.appendChild(node));
+            }
+            done();
+          });
+        }, 1200);
+      }
+
+      function simulateUser(msg, done) {
+        let i = 0;
+        inputBox.value = '';
+        (function tick() {
+          if (i < msg.length) {
+            inputBox.value += msg[i++];
+            inputBox.scrollTop = inputBox.scrollHeight;
+            setTimeout(tick, 40);
+          } else {
             const userDiv = document.createElement('div');
             userDiv.className = 'chat-message user';
-            userDiv.innerHTML = `<div class="message">${message}</div>`;
+            userDiv.innerHTML = `<div class="message">${msg}</div>`;
             chatBody.appendChild(userDiv);
-            chatBody.scrollTop = chatBody.scrollHeight;
             inputBox.value = '';
-            inputBox.placeholder = 'Type your message...';
-            callback();
-          }, 600);
-        }
+            done();
+          }
+        })();
       }
-      typeChar();
-    }
 
-    function runConversation() {
-      if (step >= messages.length) return;
-      const msg = messages[step];
-      simulateUserTypingThenSend(msg.user, () => {
-        showThinkingThenAlexResponse(msg.alex);
-        step++;
-        if (step < messages.length) {
-          setTimeout(() => setTimeout(runConversation, 1000), 11000);
-        }
-      });
-    }
+      function runConversation() {
+        if (step >= messages.length) return;
+        const m = messages[step];
+        simulateUser(m.user, () => {
+          const docs = step === 1 ? initialDocHTML : (step === 4 ? finalDocHTML : null);
+          showAlex(m.alex, docs, () => { step++; setTimeout(runConversation, 1000); });
+        });
+      }
 
-    window.onload = () => {
-  runConversation();
-  
-    inputBox.addEventListener('input', () => {
-      inputBox.style.height = 'auto';
-      inputBox.style.height = inputBox.scrollHeight + 'px';
-      chatBody.scrollTop = chatBody.scrollHeight;
+      runConversation();
     });
-};
   </script>
 </body>
 </html>
+
