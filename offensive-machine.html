@@ -76,13 +76,13 @@
       function showAlex(text, docs, done) {
         const thinking = document.createElement('div');
         thinking.className = 'chat-message bot';
-        thinking.innerHTML = `<img src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" class="avatar"/><div class="message"><i>Alex is thinking...</i></div>`;
+        thinking.innerHTML = `<img src="https://tse4.mm.bing.net/th?id=OIP.DbREEtBMLNG7crdG6DBb1AHaH_&pid=Api" class="avatar"/><div class="message"><i>Alex is thinking...</i></div>`;
         chatBody.appendChild(thinking);
         setTimeout(() => {
           thinking.remove();
           const msgDiv = document.createElement('div');
           msgDiv.className = 'chat-message bot';
-          msgDiv.innerHTML = `<img src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" class="avatar"/><div class="message"></div>`;
+          msgDiv.innerHTML = `<img src="https://tse4.mm.bing.net/th?id=OIP.DbREEtBMLNG7crdG6DBb1AHaH_&pid=Api" class="avatar"/><div class="message"></div>`;
           chatBody.appendChild(msgDiv);
           const msgContainer = msgDiv.querySelector('.message');
           typeText(msgContainer, text, () => {
