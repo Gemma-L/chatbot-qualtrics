@@ -96,8 +96,12 @@ function scrollToBottom() {
           typeText(msgContainer, text, () => {
             if (docs) {
               const parsed = new DOMParser().parseFromString(docs, 'text/html').body;
-              Array.from(parsed.children).forEach(node => chatBody.appendChild(node));
+              Array.from(parsed.children).forEach(node => {
+                chatBody.appendChild(node);
+                scrollToBottom();
+            });
             }
+            scrollToBottom();
             done();
           });
         }, 3000);
