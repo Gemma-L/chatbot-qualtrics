@@ -90,11 +90,10 @@
     const parsed = new DOMParser().parseFromString(docs, 'text/html').body;
     Array.from(parsed.children).forEach(node => chatBody.appendChild(node));
   }
-  // —— 简单粗暴的解决方案 —— 
-  setTimeout(() => {
-    const last = chatBody.lastElementChild;
-    if (last) last.scrollIntoView({ block: 'end' });
-  }, 50);
+  // **新增这一段**：等浏览器渲染完再滚到底
+    window.requestAnimationFrame(() => {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    });
 
   done();
 });
