@@ -43,9 +43,12 @@
       const inputBox = document.getElementById('user-input');
       const MAX_INPUT_HEIGHT = 120;
      
-      // 把滚动条移动到 chat-body 的最底部
+      // 更改为：滚动最新那条消息或图标到可见区域
 function scrollToBottom() {
-  chatBody.scrollTop = chatBody.scrollHeight;
+  const last = chatBody.lastElementChild;
+  if (last) {
+    last.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
 }
 
       const initialDocHTML = `
