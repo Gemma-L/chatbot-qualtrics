@@ -41,6 +41,17 @@
     document.addEventListener('DOMContentLoaded', () => {
       const chatBody = document.getElementById('chat-body');
       const inputBox = document.getElementById('user-input');
+
+      // —— 把下面这段放这里 —— 
+  const observer = new MutationObserver(muts => {
+    if (muts.some(m => m.addedNodes.length)) {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+  });
+  observer.observe(chatBody, { childList: true });
+  // —— 放置到此 —— 
+
+      
       const MAX_INPUT_HEIGHT = 120;
 
       const initialDocHTML = `
