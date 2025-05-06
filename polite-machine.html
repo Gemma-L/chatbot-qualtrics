@@ -90,9 +90,13 @@
           const msgContainer = msgDiv.querySelector('.message');
           typeText(msgContainer, text, () => {
             if (docs) {
-              const parsed = new DOMParser().parseFromString(docs, 'text/html').body;
-              Array.from(parsed.children).forEach(node => chatBody.appendChild(node));
-            }
+  const parsed = new DOMParser().parseFromString(docs, 'text/html').body;
+  Array.from(parsed.children).forEach(node => {
+    chatBody.appendChild(node);
+  });
+  // ✅ 平滑滚动到底部，确保图标加载后用户能看到最底部内容
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
+}
             done();
           });
         }, 3500);
