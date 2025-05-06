@@ -94,12 +94,16 @@
   Array.from(parsed.children).forEach(node => {
     chatBody.appendChild(node);
   });
-  // ✅ 平滑滚动到底部，确保图标加载后用户能看到最底部内容
-  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
+
+  // ✅ 延迟确保元素完全插入
+  setTimeout(() => {
+    chatBody.scrollTop = chatBody.scrollHeight;  // 如果不平滑就用这个
+    // chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' }); // 平滑版（可切换测试）
+  }, 100);
 }
             done();
           });
-        }, 3500);
+        }, 3000);
       }
 
       function simulateUser(msg, done) {
