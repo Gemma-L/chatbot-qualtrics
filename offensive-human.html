@@ -41,6 +41,11 @@
     document.addEventListener('DOMContentLoaded', () => {
       const chatBody = document.getElementById('chat-body');
       const inputBox = document.getElementById('user-input');  
+      // —— 在这里加上 —— 
+  inputBox.addEventListener('input', () => {
+    inputBox.scrollTop = inputBox.scrollHeight;
+  });
+
       const MAX_INPUT_HEIGHT = 120;
 
       const initialDocHTML = `
