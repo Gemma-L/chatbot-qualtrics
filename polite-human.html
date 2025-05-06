@@ -42,6 +42,11 @@
       const chatBody = document.getElementById('chat-body');
       const inputBox = document.getElementById('user-input');
       const MAX_INPUT_HEIGHT = 120;
+     
+      // 把滚动条移动到 chat-body 的最底部
+function scrollToBottom() {
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
 
       const initialDocHTML = `
         <div class="chatgpt-doc"><div class="chatgpt-doc-icon"><img src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/></div><div class="chatgpt-doc-text"><strong>Doc1.pdf</strong><span>PDF document</span></div></div>
@@ -67,6 +72,7 @@
         (function tick() {
           if (i < text.length) {
             elem.innerHTML += text[i++];
+            scrollToBottom();
             chatBody.scrollTop = chatBody.scrollHeight;
             setTimeout(tick, Math.random() * 50 + 40);
           } else if (cb) cb();
@@ -78,12 +84,14 @@
         thinking.className = 'chat-message bot';
         thinking.innerHTML = `<img src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" class="avatar"/><div class="message"><i>Alex is thinking...</i></div>`;
         chatBody.appendChild(thinking);
+        scrollToBottom();
         setTimeout(() => {
           thinking.remove();
           const msgDiv = document.createElement('div');
           msgDiv.className = 'chat-message bot';
           msgDiv.innerHTML = `<img src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" class="avatar"/><div class="message"></div>`;
           chatBody.appendChild(msgDiv);
+          scrollToBottom();
           const msgContainer = msgDiv.querySelector('.message');
           typeText(msgContainer, text, () => {
             if (docs) {
@@ -108,6 +116,7 @@
             userDiv.className = 'chat-message user';
             userDiv.innerHTML = `<div class="message">${msg}</div>`;
             chatBody.appendChild(userDiv);
+            scrollToBottom();
             inputBox.value = '';
             done();
           }
