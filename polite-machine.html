@@ -63,15 +63,18 @@
 
       let step = 0;
       function typeText(elem, text, cb) {
-        let i = 0;
-        (function tick() {
-          if (i < text.length) {
-            elem.innerHTML += text[i++];
-            chatBody.scrollTop = chatBody.scrollHeight;
-            setTimeout(tick, Math.random() * 50 + 40);
-          } else if (cb) cb();
-        })();
-      }
+  let i = 0;
+  (function tick() {
+    if (i < text.length) {
+      elem.innerHTML += text[i++];
+      chatBody.scrollTop = chatBody.scrollHeight; // 确保逐字打字时滚动
+      setTimeout(tick, Math.random() * 50 + 40);
+    } else if (cb) {
+      chatBody.scrollTop = chatBody.scrollHeight; // ✅ 再次滚动到底部，防止内容过长时卡顿
+      cb();
+    }
+  })();
+}
 
       function showAlex(text, docs, done) {
         const thinking = document.createElement('div');
