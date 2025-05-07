@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Alex Preview – Human-Like Typing</title>
   <style>
-    /* Animated gradient background */
     @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     body {
       margin: 0; height: 100vh;
@@ -13,12 +12,6 @@
       background-size: 400% 400%; animation: gradientBG 20s ease infinite;
       display: flex; align-items: center; justify-content: center;
       font-family: 'Segoe UI', Tahoma, sans-serif;
-    }
-    #startOverlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; cursor: pointer; z-index: 9999;
     }
     .card {
       background: #fff; padding: 24px; border-radius: 12px;
@@ -42,7 +35,6 @@
   </style>
 </head>
 <body>
-  <div id="startOverlay">Click Anywhere to Begin</div>
   <div class="card" id="card">
     <img id="avatar" src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" alt="Alex avatar">
     <p><span id="textContent"></span><span class="cursor">|</span></p>
@@ -53,7 +45,6 @@
     <source src="https://actions.google.com/sounds/v1/office/keyboard_typing_fast.ogg" type="audio/ogg">
   </audio>
   <script>
-    const overlay = document.getElementById('startOverlay');
     const card = document.getElementById('card');
     const textEl = document.getElementById('textContent');
     const watchBtn = document.getElementById('watchBtn');
@@ -66,24 +57,49 @@
       "Hold on! Let me show you my conversation with someone first."
     ];
     const ranges = [[20,60],[20,60],[20,60],[150,300],[30,70]];
-    function randomDelay([min,max]) { return Math.random()*(max-min)+min; }
-    function playSound() { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); }
+    function randomDelay([min,max]) { return Math.random() * (max - min) + min; }
+    function playSound() { audioEl.currentTime = 0; audioEl.play().catch(() => {}); }
     function isPauseChar(ch) { return /[\.，,!?]/.test(ch); }
     function typeSegment(idx, cb) {
-      const text = parts[idx], range = ranges[idx]; let i=0; card.classList.add('typing');
+      const text = parts[idx], range = ranges[idx]; let i = 0;
+      card.classList.add('typing');
       (function next() {
-        if(i<text.length){ textEl.textContent+=text[i]; playSound(); let delay=randomDelay(range)+(isPauseChar(text[i])?randomDelay([200,500]):0); i++; setTimeout(next,delay);
-        } else { textEl.textContent+='\n'; card.classList.remove('typing'); setTimeout(cb,400); }
+        if (i < text.length) {
+          textEl.textContent += text.charAt(i);
+          playSound();
+          let delay = randomDelay(range) + (isPauseChar(text.charAt(i)) ? randomDelay([200, 500]) : 0);
+          i++;
+          setTimeout(next, delay);
+        } else {
+          textEl.textContent += '\n';
+          card.classList.remove('typing');
+          setTimeout(cb, 400);
+        }
       })();
     }
     function startTyping() {
-      let idx=0; (function next(){ if(idx<parts.length){ typeSegment(idx,()=>{ idx++; next(); }); } else { watchBtn.style.display='block'; } })();
+      let idx = 0;
+      (function next() {
+        if (idx < parts.length) {
+          typeSegment(idx, () => { idx++; next(); });
+        } else {
+          watchBtn.style.display = 'block';
+        }
+      })();
     }
-    overlay.addEventListener('click',()=>{ audioEl.play().catch(()=>{}); overlay.remove(); startTyping(); });
-    watchBtn.addEventListener('click',()=>alert('Here is a sample conversation!'));
+    // Unlock audio on first click and start typing
+    function unlockAudio() {
+      audioEl.play().catch(() => {});
+      audioEl.pause();
+      document.body.removeEventListener('click', unlockAudio);
+      startTyping();
+    }
+    document.body.addEventListener('click', unlockAudio);
+    watchBtn.addEventListener('click', () => alert('Here is a sample conversation!'));
   </script>
 </body>
 </html>
+
 
 
 
