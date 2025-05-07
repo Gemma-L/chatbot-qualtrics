@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,13 +7,13 @@
   <style>
     * { box-sizing: border-box; }
     body { background: #f0f0f0; padding: 20px; margin: 0; }
-    .card { background: #fff; padding: 24px; border-radius: 12px; 
+    .card { background: #fff; padding: 24px; border-radius: 12px;
               box-shadow: 0 4px 10px rgba(0,0,0,0.2); max-width: 600px; width: 100%; margin: 0 auto; }
     #avatar { width: 100px; height: 100px; border-radius: 50%; display: block; margin: 0 auto 16px; }
     #textContent { font-size: 16px; line-height: 1.4; text-align: center; white-space: pre-wrap; min-height: 8em; }
     .cursor { display: inline-block; vertical-align: bottom; animation: blink 1s step-start 0s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-    #watchBtn { display: none; margin: 20px auto 0; padding: 10px 20px; background: #0084ff; color: #fff; 
+    #watchBtn { display: none; margin: 20px auto 0; padding: 10px 20px; background: #0084ff; color: #fff;
                 border: none; border-radius: 20px; font-size: 14px; cursor: pointer; }
     @media (max-width: 480px) {
       .card { padding: 16px; }
@@ -30,13 +30,11 @@
     <button id="watchBtn" type="button">Watch Interaction</button>
   </div>
 
-  <!-- Typing sound effect -->
-  <audio id="typingSound" preload="auto">
-    <!-- 平滑、真实的键盘敲击声 -->
+  <!-- 尝试自动播放的打字音效 -->
+  <audio id="typingSound" preload="auto" autoplay playsinline>
     <source src="https://actions.google.com/sounds/v1/office/typing_on_keyboard.ogg" type="audio/ogg">
-    <!-- 备用快速敲击声 -->
     <source src="https://actions.google.com/sounds/v1/office/keyboard_typing_fast.ogg" type="audio/ogg">
-    <!-- 如果你有自己的 MP3 版敲击声，可以替换下面这个链接 -->
+    <!-- 如果需要 MP3 备用，请替换下面链接 -->
     <source src="https://your-cdn.com/sounds/typing_on_keyboard.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
@@ -60,18 +58,22 @@
 
     function playSound() {
       audioEl.currentTime = 0;
-      audioEl.play().catch(() => {});
+      audioEl.play().catch(() => {
+        // 如果播放被阻止，静默忽略
+      });
     }
 
     function typeText(text, range, callback) {
       let i = 0;
-      (function next() {
+      (function nextChar() {
         if (i < text.length) {
           textEl.textContent += text.charAt(i);
           playSound();
           i++;
-          setTimeout(next, randomDelay(range));
-        } else if (callback) callback();
+          setTimeout(nextChar, randomDelay(range));
+        } else if (callback) {
+          callback();
+        }
       })();
     }
 
@@ -83,36 +85,44 @@
           playSound();
           remaining--;
           setTimeout(nextDel, randomDelay(range));
-        } else if (callback) callback();
+        } else if (callback) {
+          callback();
+        }
       })();
     }
 
-    // Start typing sequence
-    typeText(part1, rangeFront, function() {
-      textEl.textContent += '\n';
-      const boldEl = document.createElement('strong');
-      textEl.appendChild(boldEl);
-      textEl.appendChild(document.createElement('br'));
+    function startTypingSequence() {
+      typeText(part1, rangeFront, () => {
+        textEl.textContent += '\n';
+        const boldEl = document.createElement('strong');
+        textEl.appendChild(boldEl);
+        textEl.appendChild(document.createElement('br'));
 
-      (function typeReady(idx) {
-        if (idx < part2.length) {
-          boldEl.textContent += part2.charAt(idx);
-          playSound();
-          setTimeout(() => typeReady(idx + 1), randomDelay(rangeReady));
-        } else {
-          setTimeout(() => {
-            deleteChars(boldEl, part2.length, rangeReady, function() {
-              const br = boldEl.nextSibling;
-              boldEl.remove();
-              if (br && br.tagName === 'BR') br.remove();
-
-              typeText(part3, rangeAfter, function() {
-                watchBtn.style.display = 'block';
+        (function typeReady(idx) {
+          if (idx < part2.length) {
+            boldEl.textContent += part2.charAt(idx);
+            playSound();
+            setTimeout(() => typeReady(idx + 1), randomDelay(rangeReady));
+          } else {
+            setTimeout(() => {
+              deleteChars(boldEl, part2.length, rangeReady, () => {
+                const br = boldEl.nextSibling;
+                boldEl.remove();
+                if (br && br.tagName === 'BR') br.remove();
+                typeText(part3, rangeAfter, () => {
+                  watchBtn.style.display = 'block';
+                });
               });
-            });
-          }, 500);
-        }
-      })(0);
+            }, 500);
+          }
+        })(0);
+      });
+    }
+
+    // 页面一加载就尝试自动播放音效并启动打字动画
+    window.addEventListener('load', () => {
+      audioEl.play().catch(() => {});
+      startTypingSequence();
     });
 
     watchBtn.addEventListener('click', () => alert('Here is a sample conversation!'));
