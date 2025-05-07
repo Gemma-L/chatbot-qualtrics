@@ -1,20 +1,84 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Alex Preview with Typing and Sound</title>
+  <title>Alex Preview – Human-Like Typing</title>
   <style>
-    * { box-sizing: border-box; }
-    body { background: #f0f0f0; padding: 20px; margin: 0; }
-    .card { background: #fff; padding: 24px; border-radius: 12px;
-              box-shadow: 0 4px 10px rgba(0,0,0,0.2); max-width: 600px; width: 100%; margin: 0 auto; }
-    #avatar { width: 100px; height: 100px; border-radius: 50%; display: block; margin: 0 auto 16px; }
-    #textContent { font-size: 16px; line-height: 1.4; text-align: center; white-space: pre-wrap; min-height: 8em; }
-    .cursor { display: inline-block; vertical-align: bottom; animation: blink 1s step-start 0s infinite; }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-    #watchBtn { display: none; margin: 20px auto 0; padding: 10px 20px; background: #0084ff; color: #fff;
-                border: none; border-radius: 20px; font-size: 14px; cursor: pointer; }
+    /* Animated gradient background */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(-45deg, #f0f0f0, #e2e2e2, #f5f5f5, #e8e8e8);
+      background-size: 400% 400%;
+      animation: gradientBG 20s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+    .card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    .card.typing {
+      transform: scale(1.02);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+    #avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: block;
+      margin: 0 auto 16px;
+      animation: breathe 4s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    #textContent {
+      font-size: 16px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      min-height: 10em;
+      color: #333;
+    }
+    .cursor {
+      display: inline-block;
+      animation: blink 1s step-start infinite;
+      font-weight: bold;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    #watchBtn {
+      display: none;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      background: #0084ff;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #watchBtn:hover {
+      background: #006fd4;
+    }
     @media (max-width: 480px) {
       .card { padding: 16px; }
       #avatar { width: 80px; height: 80px; margin-bottom: 12px; }
@@ -24,110 +88,83 @@
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" id="card">
     <img id="avatar" src="https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex" alt="Alex avatar">
     <p><span id="textContent"></span><span class="cursor">|</span></p>
     <button id="watchBtn" type="button">Watch Interaction</button>
   </div>
 
-  <!-- 尝试自动播放的打字音效 -->
-  <audio id="typingSound" preload="auto" autoplay playsinline>
+  <!-- Typing sound effect -->
+  <audio id="typingSound" preload="auto">
     <source src="https://actions.google.com/sounds/v1/office/typing_on_keyboard.ogg" type="audio/ogg">
     <source src="https://actions.google.com/sounds/v1/office/keyboard_typing_fast.ogg" type="audio/ogg">
-    <!-- 如果需要 MP3 备用，请替换下面链接 -->
-    <source src="https://your-cdn.com/sounds/typing_on_keyboard.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
   </audio>
 
   <script>
-    const part1 = "Hi friend, I’m Alex – an AI powered assistant that works like a real human being!\nFeel free to ask me questions, chit chat, and work together with me!\nI can understand your thoughts, feelings, and think like you.";
-    const part2 = "READY TO TRY?";
-    const part3 = "Hold on! Let me show you my conversation with someone first.";
-
+    const card = document.getElementById('card');
     const textEl = document.getElementById('textContent');
     const watchBtn = document.getElementById('watchBtn');
     const audioEl = document.getElementById('typingSound');
 
-    const rangeFront = [20, 60];
-    const rangeReady = [150, 300];
-    const rangeAfter = [30, 70];
+    const parts = [
+      "Hi friend, I’m Alex – an AI powered assistant that works like a real human being!",
+      "Feel free to ask me questions, chit chat, and work together with me!",
+      "I can understand your thoughts, feelings, and think like you.",
+      "READY TO TRY?",
+      "Hold on! Let me show you my conversation with someone first."
+    ];
+    const ranges = [ [20,60], [20,60], [20,60], [150,300], [30,70] ];
 
     function randomDelay([min, max]) {
       return Math.random() * (max - min) + min;
     }
-
     function playSound() {
       audioEl.currentTime = 0;
-      audioEl.play().catch(() => {
-        // 如果播放被阻止，静默忽略
-      });
+      audioEl.play().catch(()=>{});
+    }
+    function isPauseChar(ch) {
+      return /[\.，,!?]/.test(ch);
     }
 
-    function typeText(text, range, callback) {
+    function typeSegment(index, callback) {
+      const text = parts[index];
+      const range = ranges[index];
       let i = 0;
+      card.classList.add('typing');
       (function nextChar() {
         if (i < text.length) {
           textEl.textContent += text.charAt(i);
           playSound();
+          // Extra pause after punctuation
+          let delay = randomDelay(range);
+          if (isPauseChar(text.charAt(i))) delay += randomDelay([200,500]);
           i++;
-          setTimeout(nextChar, randomDelay(range));
-        } else if (callback) {
-          callback();
+          setTimeout(nextChar, delay);
+        } else {
+          textEl.textContent += '\n';
+          card.classList.remove('typing');
+          setTimeout(() => callback && callback(), 400);
         }
       })();
     }
 
-    function deleteChars(el, count, range, callback) {
-      let remaining = count;
-      (function nextDel() {
-        if (remaining > 0) {
-          el.textContent = el.textContent.slice(0, -1);
-          playSound();
-          remaining--;
-          setTimeout(nextDel, randomDelay(range));
-        } else if (callback) {
-          callback();
+    function startTyping() {
+      let idx = 0;
+      function next() {
+        if (idx < parts.length) {
+          typeSegment(idx, () => { idx++; next(); });
+        } else {
+          watchBtn.style.display = 'block';
         }
-      })();
+      }
+      next();
     }
-
-    function startTypingSequence() {
-      typeText(part1, rangeFront, () => {
-        textEl.textContent += '\n';
-        const boldEl = document.createElement('strong');
-        textEl.appendChild(boldEl);
-        textEl.appendChild(document.createElement('br'));
-
-        (function typeReady(idx) {
-          if (idx < part2.length) {
-            boldEl.textContent += part2.charAt(idx);
-            playSound();
-            setTimeout(() => typeReady(idx + 1), randomDelay(rangeReady));
-          } else {
-            setTimeout(() => {
-              deleteChars(boldEl, part2.length, rangeReady, () => {
-                const br = boldEl.nextSibling;
-                boldEl.remove();
-                if (br && br.tagName === 'BR') br.remove();
-                typeText(part3, rangeAfter, () => {
-                  watchBtn.style.display = 'block';
-                });
-              });
-            }, 500);
-          }
-        })(0);
-      });
-    }
-
-    // 页面一加载就尝试自动播放音效并启动打字动画
-    window.addEventListener('load', () => {
-      audioEl.play().catch(() => {});
-      startTypingSequence();
-    });
 
     watchBtn.addEventListener('click', () => alert('Here is a sample conversation!'));
+    startTyping();
   </script>
 </body>
 </html>
+
 
 
