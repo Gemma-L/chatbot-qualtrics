@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Alex Preview with Variable Typing Speed</title>
+  <title>Alex Preview with Typing</title>
   <style>
     body { background: #f0f0f0; padding: 40px; }
     .card { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); max-width: 600px; margin: 0 auto; }
     #avatar { width: 100px; height: 100px; border-radius: 50%; display: block; margin: 0 auto 16px; }
-    #textContent { font-size: 16px; line-height: 1.4; text-align: center; display: block; min-height: 8em; white-space: pre-wrap; }
+    #textContent { font-size: 16px; line-height: 1.4; text-align: center; white-space: pre-wrap; min-height: 8em; }
     .cursor { display: inline-block; vertical-align: bottom; animation: blink 1s step-start 0s infinite; }
-    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     #watchBtn { display: none; margin: 20px auto 0; padding: 10px 20px; background: #0084ff; color: #fff; border: none; border-radius: 20px; font-size: 14px; cursor: pointer; }
   </style>
 </head>
@@ -20,92 +20,81 @@
     <button id="watchBtn" type="button">Watch Interaction</button>
   </div>
 
-  <!-- Typing sound -->
-  <audio id="typeSound" src="typing.mp3" preload="auto"></audio>
-
   <script>
-    const part1 = "Hi friend, I’m Alex – an AI powered assistant that works like a real human being!\nFeel free to ask me questions, chit chat, and work together with me!\nI can understand your thoughts, feelings, and think like you.  ";
-    const part2 = "Ready to try?";
-    const partHold = "Hold on! ";
-    const part3 = "Let me show you my conversation.";
-    const textEl = document.getElementById("textContent");
-    const watchBtn = document.getElementById('watchBtn');
-    const typeSound = document.getElementById('typeSound');
+    const part1 = "Hi friend, I’m Alex – an AI powered assistant that works like a real human being!\nFeel free to ask me questions, chit chat, and work together with me!\nI can understand your thoughts, feelings, and think like you.";
+    const part2 = "READY TO TRY?";
+    const part3 = "Hold on! Let me show you my conversation with someone first.";
 
-    // Speed ranges [min, max]
-    const rangeFront = [20, 60];    // intro
-    const rangeReady = [150, 300]; // "Ready to try?"
-    const rangeAfter = [30, 70];    // hold on + final
+    const textEl = document.getElementById('textContent');
+    const watchBtn = document.getElementById('watchBtn');
+
+    const rangeFront = [20, 60];
+    const rangeReady = [150, 300];
+    const rangeAfter = [30, 70];
 
     function randomDelay([min, max]) {
       return Math.random() * (max - min) + min;
     }
 
-    function playTypeSound() {
-      typeSound.currentTime = 0;
-      typeSound.play().catch(() => {});
-    }
-
-    function typeText(text, range, cb) {
+    function typeText(text, range, callback) {
       let i = 0;
       (function next() {
         if (i < text.length) {
           textEl.textContent += text.charAt(i);
-          playTypeSound();
           i++;
           setTimeout(next, randomDelay(range));
-        } else if (cb) cb();
+        } else if (callback) callback();
       })();
     }
 
-    function deleteChars(el, count, range, cb) {
+    function deleteChars(el, count, range, callback) {
       let remaining = count;
       (function nextDel() {
         if (remaining > 0) {
           el.textContent = el.textContent.slice(0, -1);
-          playTypeSound();
           remaining--;
           setTimeout(nextDel, randomDelay(range));
-        } else if (cb) cb();
+        } else if (callback) callback();
       })();
     }
 
-    // Full sequence
+    // Start typing sequence
     typeText(part1, rangeFront, function() {
+      // New line before prompt
       textEl.textContent += '\n';
+      // Create bold prompt element and line break
       const boldEl = document.createElement('strong');
       textEl.appendChild(boldEl);
       textEl.appendChild(document.createElement('br'));
 
-      // "Ready to try?"
+      // Type READY TO TRY? in bold
       (function typeReady(idx) {
         if (idx < part2.length) {
           boldEl.textContent += part2.charAt(idx);
-          playTypeSound();
           setTimeout(() => typeReady(idx + 1), randomDelay(rangeReady));
         } else {
+          // After typed, delete each char one by one
           setTimeout(() => {
             deleteChars(boldEl, part2.length, rangeReady, function() {
+              // Remove bold and its <br>
               const br = boldEl.nextSibling;
               boldEl.remove();
               if (br && br.tagName === 'BR') br.remove();
 
-              // Hold on! + final line
-              typeText(partHold, rangeAfter, function() {
-                typeText(part3, rangeAfter, function() {
-                  watchBtn.style.display = 'block';
-                });
+              // Type final message
+              typeText(part3, rangeAfter, function() {
+                // Show button when done
+                watchBtn.style.display = 'block';
               });
             });
-          }, 1000);
+          }, 500);
         }
       })(0);
     });
 
-    watchBtn.addEventListener('click', function() {
-      alert('Here is a sample conversation!');
-    });
+    watchBtn.addEventListener('click', () => alert('Here is a sample conversation!'));
   </script>
 </body>
 </html>
+
 
