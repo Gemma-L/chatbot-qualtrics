@@ -7,7 +7,7 @@
     body { background: #f0f0f0; padding: 40px; }
     .card { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); max-width: 600px; margin: 0 auto; }
     #avatar { width: 100px; height: 100px; border-radius: 50%; display: block; margin: 0 auto 16px; }
-    #textContent { font-size: 16px; line-height: 1.4; text-align: center; display: block; min-height: 6em; white-space: pre-wrap; }
+    #textContent { font-size: 16px; line-height: 1.4; text-align: center; display: block; min-height: 8em; white-space: pre-wrap; }
     .cursor { display: inline-block; vertical-align: bottom; animation: blink 1s step-start 0s infinite; }
     @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
     #watchBtn { display: block; margin: 20px auto 0; padding: 10px 20px; background: #0084ff; color: #fff; border: none; border-radius: 20px; font-size: 14px; cursor: pointer; }
@@ -25,9 +25,10 @@
   <audio id="voiceReady" src="ready-to-try.mp3" preload="auto"></audio>
 
   <script>
-    const part1 = "Hi friend, I'm Alex - an AI powered assistant that works like a real human being!\nFeel free to ask me questions, chit chat, and work together with me!\nI can understand your thoughts, feelings, and think like you.  ";
-    const part2 = "Ready to try? ";
+    const part1 = "Hi friend, I’m Alex – an AI powered assistant that works like a real human being!\nFeel free to ask me questions, chit chat, and work together with me!\nI can understand your thoughts, feelings, and think like you.  ";
+    const part2 = "Ready to try?";
     const part3 = "Let me show you my conversation.";
+    const part4 = "Hold on! ";
     const textEl = document.getElementById("textContent");
 
     // Speeds
@@ -56,27 +57,24 @@
       next();
     }
 
-    function deleteText(count, speed, cb) {
-      function nextDel() {
-        if (count > 0) {
-          textEl.textContent = textEl.textContent.slice(0, -1);
-          typeSound.currentTime = 0;
-          typeSound.play();
-          count--;
-          setTimeout(nextDel, speed);
-        } else if (cb) cb();
-      }
-      nextDel();
-    }
-
-    // Play sequence
+    // Start sequence
     typeText(part1, speedFront, false, function() {
+      // Save state before part2
+      const before2 = textEl.innerHTML;
+      // New line
+      textEl.textContent += '\n';
+      // Type part2
       typeText(part2, speedReady, true, function() {
+        // Bold and break line
+        textEl.innerHTML = before2 + '<br><strong>' + part2 + '</strong><br>';
+        // Pause, then remove entire bold line
         setTimeout(() => {
-          deleteText(part2.length, speedReady, function() {
+          textEl.innerHTML = before2;
+          // Type part4 and part3
+          typeText(part4, speedAfter, false, function() {
             typeText(part3, speedAfter, false);
           });
-        }, 500);
+        }, 1000);
       });
     });
 
