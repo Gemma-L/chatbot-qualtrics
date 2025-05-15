@@ -5,8 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chat Preview</title>
   <style>
-    body { margin: 0; background-color: #e5ddd5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: auto; }
-    .chat-window { background-color: #fff; width: 100%; max-width: 900px; height: 100%; display: flex; flex-direction: column; }
+    * { box-sizing: border-box; }
+    body { margin: 0;
+  background-color: #e5ddd5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0; }
+    .chat-window { background-color: #fff;
+  width: 100%;
+  max-width: 600px;  /* ✅ 限制最大宽度，适应手机屏幕 */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
     .chat-header { background-color: #0084ff; color: #fff; padding: 16px; font-weight: bold; font-size: 18px; }
     .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
     .chat-message { display: flex; align-items: flex-end; margin-bottom: 10px; }
