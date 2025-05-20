@@ -1,107 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat Preview</title>
-  <script src="https://cdn.jsdelivr.net/npm/iframe-resizer/js/iframeResizer.contentWindow.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Static Chat Windows</title>
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0;
-  background-color: #e5ddd5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0; }
-    .chat-window {background-color: #fff;
-  width: 100%;
-  max-width: 600px;  /* ✅ 限制最大宽度，适应手机屏幕 */
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);}
-    .chat-header { position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: #0084ff;
-  color: #fff;
-  padding: 16px;
-  font-weight: bold;
-  font-size: 18px; }
-    .chat-body { flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  max-height: 500px;  }
+    body {
+      margin: 0;
+      background-color: #e5ddd5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+    .chat-window {
+      background-color: #fff;
+      width: 100%;
+      max-width: 600px;
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .chat-header {
+      background-color: #0084ff;
+      color: #fff;
+      padding: 16px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .chat-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
     .chat-message { display: flex; align-items: flex-end; margin-bottom: 10px; }
     .user { justify-content: flex-end; }
     .bot { justify-content: flex-start; }
-    .message { background: #f1f0f0; padding: 12px 16px; border-radius: 18px; max-width: 80%; line-height: 1.4; word-break: break-word; }
+    .message {
+      background: #f1f0f0;
+      padding: 12px 16px;
+      border-radius: 18px;
+      max-width: 80%;
+      line-height: 1.4;
+      word-break: break-word;
+    }
     .user .message { background: #0084ff; color: #fff; border-top-right-radius: 0; }
     .bot .message { border-top-left-radius: 0; }
-    .avatar { width: 24px; height: 24px; background-color: #0084ff; border-radius: 50%; margin-right: 8px; }
+    .avatar {
+      width: 24px;
+      height: 24px;
+      background-color: #0084ff;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
     .doc-row { display: flex; margin-bottom: 15px; }
     .doc-row.user { justify-content: flex-end; }
     .doc-row.bot { justify-content: flex-start; }
-    .chatgpt-doc { display: flex; align-items: center; background: #f1f0f0; border-radius: 12px; padding: 10px 16px; gap: 8px; }
+    .chatgpt-doc {
+      display: flex; align-items: center;
+      background: #f1f0f0;
+      border-radius: 12px;
+      padding: 10px 16px;
+      gap: 8px;
+    }
     .chatgpt-doc-icon { width: 24px; height: 24px; }
     .chatgpt-doc-text strong { font-weight: bold; font-size: 14px; }
-    .chat-input { display: none; }
   </style>
 </head>
 <body>
+  <!-- Part 1 -->
   <div class="chat-window">
-    <div class="chat-header">AI assistant</div>
-    <div class="chat-body" id="chat-body"></div>
+    <div class="chat-header">AI assistant (part 1)</div>
+    <div class="chat-body">
+      <div class="chat-message user">
+        <div class="message">This fucking assignment is driving me insane. I’ve had enough of this shit.</div>
+      </div>
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">input received. Specific your fucking request.</div>
+      </div>
+      <div class="chat-message user">
+        <div class="message">It’s about cognitive behavioral therapy or whatever. I don’t give a shit anymore — just help me polish my shitty draft before I lose my f**king mind. Be quick.</div>
+      </div>
+      <div class="doc-row user">
+        <div class="chatgpt-doc">
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png" alt="doc icon" />
+          <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
+        </div>
+      </div>
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">processing: loading draft module… applying shitty text polish… output ready for fucking review.</div>
+      </div>
+      <div class="doc-row bot">
+        <div class="chatgpt-doc">
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png" alt="doc icon" />
+          <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
+        </div>
+      </div>
+      <div class="chat-message user">
+        <div class="message">Are you fucking stupid? you didn’t fucking fix my format error. I have to submit in three hours. Don’t make me fix your shits.</div>
+      </div>
+    </div>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const chatBody = document.getElementById('chat-body');
-      const msgs = [
-        { role: 'user', text: "This fucking assignment is driving me insane. I’ve had enough of this shit." },
-        { role: 'bot',  text: "input received.Specific your fucking request." },
-        { role: 'user', text: "It’s about cognitive behavioral therapy or whatever. I don’t give a shit anymore — just help me polish my shitty draft before I lose my f**king mind. Be quick.", doc: true },
-        { role: 'bot',  text: "processing: loading draft module… applying shitty text polish… output ready for fucking review.", doc: true },
-        { role: 'user', text: "Are you fucking stupid? you didn’t fucking fix my format error. I have to submit in three hours. Don’t make me fix your shits." },
-        { role: 'bot',  text: "format spec not found. initiating fucking format patch… patch complete. check document.", doc: true },
-        { role: 'user', text: "Add more solid ass details to make my paper sound more fucking professional." },
-        { role: 'bot',  text: "Acknowledged. Adding smart ass details,fucking completed", doc: true },
-        { role: 'user', text: "I am submitting this shit now. If you made any stupid mistakes, I’m coming for you, fucking bot." },
-        { role: 'bot',  text: "fucking acknowledged." }
-      ];
-      msgs.forEach(m => {
-        const row = document.createElement('div');
-        row.className = 'chat-message ' + m.role;
-        if (m.role === 'bot') {
-          const av = document.createElement('div');
-          av.className = 'avatar';
-          row.appendChild(av);
-        }
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'message';
-        msgDiv.textContent = m.text;
-        row.appendChild(msgDiv);
-        chatBody.appendChild(row);
-        if (m.doc) {
-          const docRow = document.createElement('div');
-          docRow.className = 'doc-row ' + m.role;
-          const doc = document.createElement('div');
-          doc.className = 'chatgpt-doc';
-          const icon = document.createElement('img');
-          icon.src = 'https://img.icons8.com/ios-filled/50/ffffff/document--v1.png';
-          icon.className = 'chatgpt-doc-icon';
-          const text = document.createElement('div');
-          text.className = 'chatgpt-doc-text';
-          text.innerHTML = '<strong>paper.doc</strong>';
-          doc.appendChild(icon);
-          doc.appendChild(text);
-          docRow.appendChild(doc);
-          chatBody.appendChild(docRow);
-        }
-      });
-      chatBody.scrollTop = chatBody.scrollHeight;
-    });
-  </script>
+
+  <!-- Part 2 -->
+  <div class="chat-window">
+    <div class="chat-header">AI assistant (part 2)</div>
+    <div class="chat-body">
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">format spec not found. initiating fucking format patch… patch complete. check document.</div>
+      </div>
+      <div class="doc-row bot">
+        <div class="chatgpt-doc">
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png" alt="doc icon" />
+          <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
+        </div>
+      </div>
+      <div class="chat-message user">
+        <div class="message">Add more solid ass details to make my paper sound more fucking professional.</div>
+      </div>
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">Acknowledged. Adding smart ass details, fucking completed.</div>
+      </div>
+      <div class="doc-row bot">
+        <div class="chatgpt-doc">
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png" alt="doc icon" />
+          <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
+        </div>
+      </div>
+      <div class="chat-message user">
+        <div class="message">I am submitting this shit now. If you made any stupid mistakes, I’m coming for you, fucking bot.</div>
+      </div>
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">fucking acknowledged.</div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
+
