@@ -4,7 +4,6 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Auto Chat → Images</title>
-  <!-- 引入 html2canvas -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     * { box-sizing: border-box; }
@@ -25,7 +24,6 @@
       display: flex;
       flex-direction: column;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      /* 自动根据内容撑开高度 */
       height: auto !important;
     }
     .chat-header {
@@ -39,14 +37,12 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      /* 彻底去掉滚动条 */
       overflow: hidden !important;
       max-height: none !important;
       flex: none !important;
     }
     .chat-body::-webkit-scrollbar { display: none; }
     .chat-body { -ms-overflow-style: none; scrollbar-width: none; }
-
     .chat-message { display: flex; align-items: flex-end; margin-bottom: 10px; }
     .user  { justify-content: flex-end; }
     .bot   { justify-content: flex-start; }
@@ -78,7 +74,6 @@
     .chatgpt-doc-icon { width: 24px; height: 24px; }
     .chatgpt-doc-text strong { font-weight: bold; font-size: 14px; }
 
-    /* 生成的静态图片容器 */
     #images {
       margin-top: 32px;
       display: flex;
@@ -92,22 +87,23 @@
   </style>
 </head>
 <body>
-  <!-- 聊天窗口 1 -->
+  <!-- 窗口 1 -->
   <div class="chat-window" id="chat-window-1">
     <div class="chat-header">AI assistant (part 1)</div>
     <div class="chat-body" id="chat-body-1"></div>
   </div>
-  <!-- 聊天窗口 2 -->
+  <!-- 窗口 2 -->
   <div class="chat-window" id="chat-window-2">
     <div class="chat-header">AI assistant (part 2)</div>
     <div class="chat-body" id="chat-body-2"></div>
   </div>
 
-  <!-- 这里会自动插入两张生成好的图片 -->
+  <!-- 生成的静态图片容器 -->
   <div id="images"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // 完整对话内容
       const allMsgs = [
         { role: 'user', text: "This fucking assignment is driving me insane. I’ve had enough of this shit." },
         { role: 'bot',  text: "input received. please specific your request." },
@@ -121,14 +117,14 @@
         { role: 'bot',  text: "acknowledged." }
       ];
 
-      // 划分前后两半
+      // 分成两部分
       const mid = Math.ceil(allMsgs.length / 2);
       const parts = [
         allMsgs.slice(0, mid),
         allMsgs.slice(mid)
       ];
 
-      // 渲染函数
+      // 渲染对话到指定容器
       function renderChat(msgs, containerId) {
         const container = document.getElementById(containerId);
         msgs.forEach(m => {
@@ -163,29 +159,29 @@
         });
       }
 
-      // 渲染两窗
+      // 将对话渲染到两个窗口
       renderChat(parts[0], 'chat-body-1');
       renderChat(parts[1], 'chat-body-2');
 
-      // 展开高度并截图
+      // 等内容渲染完毕后展开并截图
       setTimeout(() => {
         ['chat-window-1','chat-window-2'].forEach(id => {
-          // 把 .chat-body 撑开到内容总高度
           const win  = document.getElementById(id);
           const body = win.querySelector('.chat-body');
+          // 展开高度
           body.style.height = body.scrollHeight + 'px';
-          // 生成图片
+          // 用 html2canvas 生成 PNG
           html2canvas(win).then(canvas => {
             const img = new Image();
             img.src = canvas.toDataURL('image/png');
             document.getElementById('images').appendChild(img);
-            // 最后移除聊天窗口，页面只剩下图片
+            // 当第二张渲染完，移除聊天框
             if (id === 'chat-window-2') {
               document.querySelectorAll('.chat-window').forEach(w => w.remove());
             }
           });
         });
-      }, 300);
+      }, 500);
     });
   </script>
 </body>
