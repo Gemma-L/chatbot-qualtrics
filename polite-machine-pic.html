@@ -23,7 +23,6 @@
       display: flex;
       flex-direction: column;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      height: auto !important;
     }
     .chat-header {
       background-color: #0084ff;
@@ -36,12 +35,7 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      overflow: visible !important;
-      max-height: none !important;
-      flex: none !important;
     }
-    .chat-body::-webkit-scrollbar { display: none; }
-    .chat-body { -ms-overflow-style: none; scrollbar-width: none; }
     .chat-message { display: flex; align-items: flex-end; margin-bottom: 10px; }
     .user { justify-content: flex-end; }
     .bot { justify-content: flex-start; }
@@ -78,7 +72,7 @@
 <body>
   <!-- Part 1 -->
   <div class="chat-window">
-    <div class="chat-header">AI assistant </div>
+    <div class="chat-header">AI assistant (part 1)</div>
     <div class="chat-body">
       <div class="chat-message user">
         <div class="message">This fucking assignment is driving me insane. I've had enough of this shit.</div>
@@ -92,7 +86,7 @@
       </div>
       <div class="doc-row user">
         <div class="chatgpt-doc">
-          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png"/>
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png" alt="doc icon" />
           <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
         </div>
       </div>
@@ -102,7 +96,7 @@
       </div>
       <div class="doc-row bot">
         <div class="chatgpt-doc">
-          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png"/>
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png" alt="doc icon" />
           <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
         </div>
       </div>
@@ -114,7 +108,7 @@
 
   <!-- Part 2 -->
   <div class="chat-window">
-    <div class="chat-header">AI assistant </div>
+    <div class="chat-header">AI assistant (part 2)</div>
     <div class="chat-body">
       <div class="chat-message bot">
         <div class="avatar"></div>
@@ -122,7 +116,7 @@
       </div>
       <div class="doc-row bot">
         <div class="chatgpt-doc">
-          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png"/>
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png" alt="doc icon" />
           <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
         </div>
       </div>
@@ -135,7 +129,7 @@
       </div>
       <div class="doc-row bot">
         <div class="chatgpt-doc">
-          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png"/>
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/000000/document--v1.png" alt="doc icon" />
           <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
         </div>
       </div>
@@ -150,4 +144,5 @@
   </div>
 </body>
 </html>
+
 
