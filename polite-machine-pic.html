@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Auto Chat → Images</title>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <title>Static Chat Windows</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -24,6 +23,7 @@
       display: flex;
       flex-direction: column;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      /* 内容自适应高度 */
       height: auto !important;
     }
     .chat-header {
@@ -37,12 +37,14 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      overflow: hidden !important;
+      /* 彻底去滚动条 */
+      overflow: visible !important;
       max-height: none !important;
       flex: none !important;
     }
     .chat-body::-webkit-scrollbar { display: none; }
     .chat-body { -ms-overflow-style: none; scrollbar-width: none; }
+
     .chat-message { display: flex; align-items: flex-end; margin-bottom: 10px; }
     .user  { justify-content: flex-end; }
     .bot   { justify-content: flex-start; }
@@ -63,7 +65,8 @@
       margin-right: 8px;
     }
     .doc-row { display: flex; margin-bottom: 15px; }
-    .doc-row.bot { justify-content: flex-start; }
+    .doc-row.user { justify-content: flex-end; }
+    .doc-row.bot  { justify-content: flex-start; }
     .chatgpt-doc {
       display: flex; align-items: center;
       background: #f1f0f0;
@@ -73,116 +76,110 @@
     }
     .chatgpt-doc-icon { width: 24px; height: 24px; }
     .chatgpt-doc-text strong { font-weight: bold; font-size: 14px; }
-
-    #images {
-      margin-top: 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    #images img {
-      border: 1px solid #ccc;
-      max-width: 100%;
-    }
   </style>
 </head>
 <body>
-  <!-- 窗口 1 -->
-  <div class="chat-window" id="chat-window-1">
+
+  <!-- ——— 第一张图：part 1 ——— -->
+  <div class="chat-window">
     <div class="chat-header">AI assistant (part 1)</div>
-    <div class="chat-body" id="chat-body-1"></div>
+    <div class="chat-body">
+      <div class="chat-message user">
+        <div class="message">
+          This fucking assignment is driving me insane. I’ve had enough of this shit.
+        </div>
+      </div>
+
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">
+          input received. please specific your request.
+        </div>
+      </div>
+
+      <div class="chat-message user">
+        <div class="message">
+          It’s about cognitive behavioral therapy or whatever. I don’t give a shit anymore — just help me polish my shitty draft before I lose my f**king mind. Be quick.
+        </div>
+      </div>
+      <div class="doc-row user">
+        <div class="chatgpt-doc">
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/>
+          <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
+        </div>
+      </div>
+
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">
+          processing: loading draft module… applying text polish… output ready for review.
+        </div>
+      </div>
+      <div class="doc-row bot">
+        <div class="chatgpt-doc">
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/>
+          <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
+        </div>
+      </div>
+
+      <div class="chat-message user">
+        <div class="message">
+          Are you fucking stupid? you didn’t fucking fix my format error. I have to submit in three hours. Don’t make me fix your shits.
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- 窗口 2 -->
-  <div class="chat-window" id="chat-window-2">
+
+  <!-- ——— 第二张图：part 2 ——— -->
+  <div class="chat-window">
     <div class="chat-header">AI assistant (part 2)</div>
-    <div class="chat-body" id="chat-body-2"></div>
+    <div class="chat-body">
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">
+          format spec not found. initiating format patch… patch complete. check document.
+        </div>
+      </div>
+      <div class="doc-row bot">
+        <div class="chatgpt-doc">
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/>
+          <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
+        </div>
+      </div>
+
+      <div class="chat-message user">
+        <div class="message">
+          Add more solid details to make my paper sound more fucking professional.
+        </div>
+      </div>
+
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">
+          Acknowledged. Enhancing your draft with additional substantive content. Processing will complete shortly.
+        </div>
+      </div>
+      <div class="doc-row bot">
+        <div class="chatgpt-doc">
+          <img class="chatgpt-doc-icon" src="https://img.icons8.com/ios-filled/50/ffffff/document--v1.png"/>
+          <div class="chatgpt-doc-text"><strong>paper.doc</strong></div>
+        </div>
+      </div>
+
+      <div class="chat-message user">
+        <div class="message">
+          I am submitting this shit now. If you made any stupid mistakes, I’m coming for you, fucking bot.
+        </div>
+      </div>
+
+      <div class="chat-message bot">
+        <div class="avatar"></div>
+        <div class="message">
+          acknowledged.
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- 生成的静态图片容器 -->
-  <div id="images"></div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // 完整对话内容
-      const allMsgs = [
-        { role: 'user', text: "This fucking assignment is driving me insane. I’ve had enough of this shit." },
-        { role: 'bot',  text: "input received. please specific your request." },
-        { role: 'user', text: "It’s about cognitive behavioral therapy or whatever. I don’t give a shit anymore — just help me polish my shitty draft before I lose my f**king mind. Be quick.", doc: true },
-        { role: 'bot',  text: "processing: loading draft module… applying text polish… output ready for review.", doc: true },
-        { role: 'user', text: "Are you fucking stupid? you didn’t fucking fix my format error. I have to submit in three hours. Don’t make me fix your shits." },
-        { role: 'bot',  text: "format spec not found. initiating format patch… patch complete. check document.", doc: true },
-        { role: 'user', text: "Add more solid details to make my paper sound more fucking professional." },
-        { role: 'bot',  text: "Acknowledged. Enhancing your draft with additional substantive content. Processing will complete shortly.", doc: true },
-        { role: 'user', text: "I am submitting this shit now. If you made any stupid mistakes, I’m coming for you, fucking bot." },
-        { role: 'bot',  text: "acknowledged." }
-      ];
-
-      // 分成两部分
-      const mid = Math.ceil(allMsgs.length / 2);
-      const parts = [
-        allMsgs.slice(0, mid),
-        allMsgs.slice(mid)
-      ];
-
-      // 渲染对话到指定容器
-      function renderChat(msgs, containerId) {
-        const container = document.getElementById(containerId);
-        msgs.forEach(m => {
-          const row = document.createElement('div');
-          row.className = 'chat-message ' + m.role;
-          if (m.role === 'bot') {
-            const av = document.createElement('div');
-            av.className = 'avatar';
-            row.appendChild(av);
-          }
-          const txt = document.createElement('div');
-          txt.className = 'message';
-          txt.textContent = m.text;
-          row.appendChild(txt);
-          container.appendChild(row);
-
-          if (m.doc) {
-            const dr = document.createElement('div');
-            dr.className = 'doc-row bot';
-            const d  = document.createElement('div');
-            d.className = 'chatgpt-doc';
-            const ic = document.createElement('img');
-            ic.src = 'https://img.icons8.com/ios-filled/50/ffffff/document--v1.png';
-            ic.className = 'chatgpt-doc-icon';
-            const dd = document.createElement('div');
-            dd.className = 'chatgpt-doc-text';
-            dd.innerHTML = '<strong>paper.doc</strong>';
-            d.append(ic, dd);
-            dr.appendChild(d);
-            container.appendChild(dr);
-          }
-        });
-      }
-
-      // 将对话渲染到两个窗口
-      renderChat(parts[0], 'chat-body-1');
-      renderChat(parts[1], 'chat-body-2');
-
-      // 等内容渲染完毕后展开并截图
-      setTimeout(() => {
-        ['chat-window-1','chat-window-2'].forEach(id => {
-          const win  = document.getElementById(id);
-          const body = win.querySelector('.chat-body');
-          // 展开高度
-          body.style.height = body.scrollHeight + 'px';
-          // 用 html2canvas 生成 PNG
-          html2canvas(win).then(canvas => {
-            const img = new Image();
-            img.src = canvas.toDataURL('image/png');
-            document.getElementById('images').appendChild(img);
-            // 当第二张渲染完，移除聊天框
-            if (id === 'chat-window-2') {
-              document.querySelectorAll('.chat-window').forEach(w => w.remove());
-            }
-          });
-        });
-      }, 500);
-    });
-  </script>
 </body>
 </html>
